@@ -57,8 +57,8 @@ Documentation
  - [API Changes](/API_Changes.md)
 
 
-Mailing List
-------------
+Community
+---------
 
 Feel free to ask questions on the microblx mailing list:
 
@@ -113,4 +113,4 @@ block IEC-61131 and IEC-61499.
 
 This work was supported by the European FP7 projects RoboHow
 (FP7-ICT-288533), BRICS (FP7- ICT-231940), Rosetta (FP7-ICT-230902),
-Pick-n-Pack (FP7-NMP-311987) and euRobotics (FP7-ICT-248552).
+Pick-n-Pack (FP7-NMP-311987) and SHERPA (FP7-ICT-600958).
