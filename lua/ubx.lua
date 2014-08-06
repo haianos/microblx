@@ -137,7 +137,7 @@ local ubx
 if utils.file_exists("src/libubx.so") then --if local
   ubx=ffi.load("src/libubx.so")
 elseif utils.file_exists(ubx_env.get_ubx_root().."src/libubx.so") then
-  ubx=ffi.load("src/libubx.so")
+  ubx=ffi.load(ubx_env.get_ubx_root().."src/libubx.so")
 else
   ubx=ffi.load(ubx_env.get_ubx_install().."/lib/ubx/libubx.so")
 end
