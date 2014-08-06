@@ -46,6 +46,7 @@ enum {
 struct ubx_type;
 struct ubx_data;
 struct ubx_block;
+struct ubx_subnode;
 struct ubx_node_info;
 
 /*
@@ -205,7 +206,8 @@ typedef struct ubx_block
 	char *prototype; /* name of prototype, NULL if none */
 
 	struct ubx_node_info* ni;
-
+        struct ubx_subnode* sn; 
+        
 	int(*init) (struct ubx_block*);
 	int(*start) (struct ubx_block*);
 	void(*stop) (struct ubx_block*);
@@ -236,7 +238,8 @@ typedef struct ubx_block
 
 	void* private_data;
 
-	UT_hash_handle hh;
+        UT_hash_handle hh;  /* Hash table, for plain registration */
+        UT_hash_handle hsn; /* Hash table, for composition purposes */
 
 } ubx_block_t;
 
@@ -252,6 +255,15 @@ typedef struct ubx_module
 	UT_hash_handle hh;
 } ubx_module_t;
 
+/*
+ * ubx subnode
+ * Holds references and information for the composer/composition pattern
+ */
+typedef struct ubx_subnode
+{
+  ubx_block_t *blist;
+  ubx_block_t *scope;
+} ubx_subnode_t;
 
 /* node information
  * holds references to all known blocks and types

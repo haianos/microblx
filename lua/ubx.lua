@@ -252,6 +252,12 @@ function M.block_get(ni, bname)
    return b
 end
 
+function M.get_block_scope(ni, bname)
+  local b = ubx.ubx_get_block_scope(ni, bname)
+--   if b==nil then print("block_get scope: no scope for block with name '"..ts(bname).."'") end
+  return b
+end
+
 --- Unload a block: bring it to state preinit and call ubx_block_rm
 function M.block_unload(ni, name)
    local b=M.block_get(ni, name)

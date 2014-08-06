@@ -19,6 +19,17 @@ function get_ubx_root()
   return rootpath.."/"
 end
 
+--- Extract the UBX_INSTALL environment variable path
+-- @return string UBX_INSTALL
+function get_ubx_install()
+  local rootpath = os.getenv("UBX_INSTALL")
+  if rootpath == nil then
+    return ""
+  end
+
+  return rootpath.."/"
+end
+
 --- Extract the UBX_MODULES environment variable path
 -- @return string UBX_MODULES path
 function get_ubx_modules()
@@ -34,6 +45,17 @@ end
 -- @return string UBX_MODELS path
 function get_ubx_models()
   local path = os.getenv("UBX_MODELS")
+  if path == nil then
+    return ""
+  end
+
+  return path.."/"
+end
+
+--- Extract the UBX_METAMODELS environment variable path
+-- @return string UBX_METAMODELS path
+function get_ubx_metamodels()
+  local path = os.getenv("UBX_METAMODELS")
   if path == nil then
     return ""
   end

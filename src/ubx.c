@@ -901,6 +901,54 @@ static int ubx_clone_config_data(ubx_config_t *cnew,
 	return -1;
 }
 
+int ubx_add_in_scope(ubx_block_t* tgt, ubx_block_t* scope)
+{
+  int ret = -1;
+  ubx_block_t* tmp = NULL;
+  
+  /* standard check integrity arguments */
+  if(tgt==NULL) {
+    ERR("target block is NULL");
+    goto out;
+  }
+  if(scope==NULL) {
+    ERR("scope block is NULL");
+    goto out;
+  }
+  
+  /* Check uniqueness */
+  HASH_FIND(hsn,scope->sn->blist,tgt->name,sizeof(char*),tmp);
+  
+  if(tmp!=NULL) {
+    ERR("block '%s' is already in the scope of block '%s'",tgt->name, scope->name);
+    goto out;
+  }
+  
+  /* Finally, add in scope */
+  tgt->sn->scope = scope;
+  HASH_ADD_KEYPTR(hsn,scope->sn->blist,tgt->name,sizeof(tgt->name),tgt);
+  
+  ret=0;
+out:
+  return ret;
+}
+
+int ubx_rm_block_from_scope(ubx_block_t* tgt)
+{
+  int ret=-1;
+  ubx_block_t* scope = tgt->sn->scope;
+  
+  if(scope==NULL) {
+    ERR("block '%s' does not have a scope already",tgt->name);
+    goto out;
+  }
+  HASH_DELETE(hsn,scope->sn->blist,tgt);
+  tgt->sn->scope = NULL;
+  
+  ret=0;
+out:
+  return ret;  
+}
 
 /**
  * ubx_block_free - free all memory related to a block
@@ -960,6 +1008,12 @@ static ubx_block_t* ubx_block_clone(ubx_block_t* prot, const char* name)
 
 	newb->block_state = BLOCK_STATE_PREINIT;
 
+        if((newb->sn = (ubx_subnode_t*)malloc(sizeof(ubx_subnode_t)))==NULL)
+          goto out_free;
+        
+        newb->sn->blist=NULL;
+        newb->sn->scope=NULL;
+        
 	/* copy attributes of prototype */
 	newb->type = prot->type;
 
@@ -2062,6 +2116,27 @@ void __port_write(ubx_port_t* port, ubx_data_t* data)
 	return;
 }
 
+/* Utility stuff, bypass FFI layer so far */
+/**
+ * Retrieve a block scope by internal block name
+ *
+ * @param ni
+ * @param name
+ *
+ * @return ubx_block_t*
+ */
+ubx_block_t* ubx_get_block_scope(ubx_node_info_t *ni, const char *name)
+{
+        ubx_block_t *tmpc=NULL;
+        HASH_FIND_STR(ni->blocks, name, tmpc);
+        if(tmpc!=NULL) {
+          if(tmpc->sn->scope!=NULL)
+            tmpc=tmpc->sn->scope;
+        }
+        else
+          printf("block '%s' not found\n",name);
+        return tmpc;
+}
 
 /* OS stuff, for scripting layer */
 

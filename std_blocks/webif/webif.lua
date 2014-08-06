@@ -298,7 +298,11 @@ function blocklist_tohtml(blklst, header, table_fields)
 	 t.name=a("/block?name="..t.name, t.name)
       end
 
+      local function add_scope(t)
+        t.scope = t.name
+      end
 
+--       add_scope(t)
       add_actions(t)
       colorize_state(t)
       add_block_info_href(t)
@@ -543,8 +547,8 @@ function show_block(ri, ni)
 end
 
 local protoblocks_table_fields = { 'name', 'block_type' }
-local cblock_table_fields = { 'name', 'state', 'prototype', 'stat_num_steps', 'actions' }
-local iblock_table_fields = { 'name', 'state', 'prototype', 'stat_num_reads', 'stat_num_writes', 'actions' }
+local cblock_table_fields = { 'name', 'state', 'prototype', 'stat_num_steps', 'actions' , 'scope' }
+local iblock_table_fields = { 'name', 'state', 'prototype', 'stat_num_reads', 'stat_num_writes', 'actions', 'scope' }
 
 --- master dispatch table.
 dispatch_table = {
@@ -556,6 +560,46 @@ dispatch_table = {
 	      local cinst = ubx.blocks_map(ni, ubx.block_totab, ubx.is_cblock_instance)
 	      local iinst = ubx.blocks_map(ni, ubx.block_totab, ubx.is_iblock_instance)
 
+              function _abs_scope(ni,b,scopename)
+                local sname = scopename or 'none'
+                local sb = ubx.get_block_scope(ni,b.name)
+                print("call")
+                
+                if sb==nil then
+                  print("no scope")
+                  if sname then
+                    return sname
+                  else
+                    return 'none'
+                  end
+                else
+                  sb = ubx.block_totab(sb)
+                  print("scope "..sb.name)
+--                 else
+-- --                   return "not here"
+-- --                 else
+                  if not sname then 
+                    sname = '' 
+                  end
+                  return sb.name--_abs_scope(ni,sb,sname)
+                end
+              end
+              
+              for i,v in pairs(cinst) do
+                local scopename
+--                 local scope = _composition_names(ni,v.name)
+--                 if scope then v.scope=scope end
+--                 v.scope = v.name
+                v.scope = _abs_scope(ni,v)
+              end
+              
+              for i,v in pairs(iinst) do
+--                 local scope = _composition_names(ni,v.name)
+--                 if scope then v.scope=scope end
+--                 v.scope = v.name
+                  v.scope = _abs_scope(ni,v)
+              end
+              
 	      table.sort(protoblocks, function (one,two) return one.block_type<two.block_type end)
 	      table.sort(cinst, function (one,two) return one.name<two.name end)
 	      table.sort(iinst, function (one,two) return one.name<two.name end)

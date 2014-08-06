@@ -20,3 +20,16 @@ This file tracks user visible API changes.
 
  * renamed module_init/module_cleanup to UBX_MODULE_INIT/UBX_MODULE_CLEANUP
 
+Proposed API Changes
+=====================
+
+List of API not yet implemented
+
+ * generation function read/write port
+ 
+ * subnode/composition utilities, API as
+ * create plain block
+ * remove plain block
+ * remove block from one composition
+ * add block to one composition
+ * mv block to one composition (add+rm safe)
