@@ -60,7 +60,13 @@ ni = model:launch{nodename=nodename, verbose=true}
 if opttab['-webif'] then
    local port = opttab['-webif'][1] or 8888
    print("starting up webinterface block (port: "..ts(port)..")")
-   ubx.load_module(ni, ubx_env.get_ubx_root().."std_blocks/webif/webif.so")
+   if utils.file_exists("std_blocks/webif/webif.so") then --local
+     ubx.load_module(ni, ubx_env.get_ubx_root().."std_blocks/webif/webif.so")
+   elseif utils.file_exists(ubx_env.get_ubx_root().."std_blocks/webif/webif.so") then  -- on main code
+     ubx.load_module(ni, ubx_env.get_ubx_root().."std_blocks/webif/webif.so")
+   else
+     ubx.load_module(ni, ubx_env.get_ubx_install().."lib/ubx/std_blocks/webif/webif.so")  -- on install
+   end
    local webif1=ubx.block_create(ni, "webif/webif", "webif1", { port=ts(port) })
    assert(ubx.block_init(webif1)==0)
    assert(ubx.block_start(webif1)==0)

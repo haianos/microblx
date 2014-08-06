@@ -66,7 +66,13 @@ local setup_enums
 -- @param file name of file
 -- @return string contents
 local function read_file(file)
-   local f = assert(io.open(ubx_env.get_ubx_root()..file, "rb"))
+   local f = io.open("src/"..file, "rb")
+   if not f then
+     f = io.open(ubx_env.get_ubx_root()..file, "rb")
+     if not f then
+       f= assert(io.open(ubx_env.get_ubx_install().."include/ubx/core/"..file, "rb"))
+     end
+   end
    local data = f:read("*all")
    f:close()
    return data
@@ -122,10 +128,19 @@ local function setup_enums()
 end
 
 -- load ubx_types and library
-ffi.cdef(read_file("src/uthash_ffi.h"))
-ffi.cdef(read_file("src/ubx_types.h"))
-ffi.cdef(read_file("src/ubx_proto.h"))
-local ubx=ffi.load(ubx_env.get_ubx_root().."src/libubx.so")
+ffi.cdef(read_file("uthash_ffi.h"))
+ffi.cdef(read_file("ubx_types.h"))
+ffi.cdef(read_file("ubx_proto.h"))
+
+-- Find and load ubx library (.so)
+local ubx
+if utils.file_exists("src/libubx.so") then --if local
+  ubx=ffi.load("src/libubx.so")
+elseif utils.file_exists(ubx_env.get_ubx_root().."src/libubx.so") then
+  ubx=ffi.load("src/libubx.so")
+else
+  ubx=ffi.load(ubx_env.get_ubx_install().."/lib/ubx/libubx.so")
+end
 
 setmetatable(M, { __index=function(t,k) return ubx["ubx_"..k] end })
 
