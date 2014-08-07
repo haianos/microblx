@@ -2,6 +2,7 @@ include make.conf
 
 INCLUDE_DIR=$(CURDIR)/src/
 DIRS=src $(wildcard std_blocks/* std_types/* examples)
+IDIRS=std_types/stdtypes std_blocks/ptrig
 
 SHELL = /bin/sh
 INSTALL = /usr/bin/install
@@ -10,7 +11,7 @@ INSTALL_DATA = $(INSTALL) -m 644
 # include Makefile.conf
 
 BUILDDIRS = $(DIRS:%=build-%)
-INSTALLDIRS = $(DIRS:%=install-%)
+INSTALLDIRS = $(IDIRS:%=install-%)
 CLEANDIRS = $(DIRS:%=clean-%)
 TESTDIRS = $(DIRS:%=test-%)
 

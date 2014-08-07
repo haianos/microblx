@@ -8,5 +8,8 @@ stdtypes.so: stdtypes.o $(INCLUDE_DIR)/libubx.so
 stdtypes.o: stdtypes.c $(INCLUDE_DIR)/ubx.h $(INCLUDE_DIR)/ubx_types.h $(INCLUDE_DIR)/ubx.c
 	${CC} -fPIC -I$(INCLUDE_DIR) -c $(CFLAGS) stdtypes.c
 
+install: stdtypes.so $(UBX_LIB)
+	${CC} $(LDFLAGS) -shared -o stdtypes.so stdtypes.o -lubx
+
 clean:
 	rm -f *.o *.so *~ core

@@ -15,5 +15,8 @@ ptrig.so: ptrig.o $(INCLUDE_DIR)/libubx.so
 ptrig.o: ptrig.c $(INCLUDE_DIR)/ubx.h $(INCLUDE_DIR)/ubx_types.h $(INCLUDE_DIR)/ubx.c $(HEXARRS)
 	${CC} -fPIC -pthread -I$(INCLUDE_DIR) -c $(CFLAGS) ptrig.c
 
+install: ptrig.so $(UBX_LIB)
+	${CC} $(CFLAGS_SHARED) $(LDFLAGS) -shared -o ptrig.so ptrig.o -pthread -lubx
+
 clean:
 	rm -f *.o *.so *~ core $(HEXARRS)
