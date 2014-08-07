@@ -8,5 +8,8 @@ hexdump.so: hexdump.o $(INCLUDE_DIR)/libubx.so
 hexdump.o: hexdump.c $(INCLUDE_DIR)/ubx.h $(INCLUDE_DIR)/ubx_types.h $(INCLUDE_DIR)/ubx.c
 	${CC} -fPIC -I$(INCLUDE_DIR) -c $(CFLAGS) hexdump.c
 
+install: hexdump.so
+	${CC} $(CFLAGS_SHARED) $(LDFLAGS) -o hexdump.so hexdump.o -lubx
+
 clean:
 	rm -f *.o *.so *~ core

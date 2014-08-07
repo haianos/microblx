@@ -15,5 +15,8 @@ file_logger.lua.hexarr: file_logger.lua
 file_logger.o: file_logger.c $(INCLUDE_DIR)/ubx.h $(INCLUDE_DIR)/ubx_types.h $(INCLUDE_DIR)/ubx.c $(HEXARRS)
 	${CC} -fPIC -I$(INCLUDE_DIR) -c $(CFLAGS) file_logger.c
 
+install: file_logger.so $(UBX_LIB)
+	${CC} $(CFLAGS_SHARED) $(LDFLAGS) -o file_logger.so file_logger.o -lluajit-5.1  -lpthread -lubx
+
 clean:
 	rm -f *.o *.so *~ core $(HEXARRS)

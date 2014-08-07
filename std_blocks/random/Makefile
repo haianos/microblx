@@ -11,5 +11,8 @@ random.so: random.o $(INCLUDE_DIR)/libubx.so
 random.o: random.c $(INCLUDE_DIR)/ubx.h $(INCLUDE_DIR)/ubx_types.h $(INCLUDE_DIR)/ubx.c $(HEXARRS)
 	${CC} -fPIC -I$(INCLUDE_DIR) -c $(CFLAGS) random.c
 
+install: random.so $(UBX_LIB)
+	${CC} $(CFLAGS_SHARED) $(LDFLAGS) -o random.so random.o -lubx
+
 clean:
 	rm -f *.o *.so *~ core $(HEXARRS)

@@ -11,5 +11,8 @@ luablock.so: luablock.o $(INCLUDE_DIR)/libubx.so
 luablock.o: luablock.c $(INCLUDE_DIR)/ubx.h $(INCLUDE_DIR)/ubx_types.h $(INCLUDE_DIR)/ubx.c $(HEXARRS)
 	${CC} -fPIC -I$(INCLUDE_DIR) -c $(CFLAGS) luablock.c
 
+install: luablock.so $(UBX_LIB)
+	${CC} $(CFLAGS_SHARED) $(LDFLAGS) -o luablock.so luablock.o -lluajit-5.1  -lpthread -lubx
+
 clean:
 	rm -f *.o *.so *~ core $(HEXARRS)
