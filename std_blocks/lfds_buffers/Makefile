@@ -20,6 +20,9 @@ liblfds611/bin/liblfds611.a:
 	$(shell mkdir -p liblfds611/obj liblfds611/bin)
 	make -C liblfds611
 
+install: lfds_cyclic.so lfds_cyclic_raw.so liblfds611/bin/liblfds611.a $(UBX_LIB)
+	${CC} $(CFLAGS_SHARED) $(LDFLAGS) -o lfds_cyclic.so lfds_cyclic.o liblfds611/bin/liblfds611.a -lubx
+	${CC} $(CFLAGS_SHARED) $(LDFLAGS) -o lfds_cyclic_raw.so lfds_cyclic_raw.o liblfds611/bin/liblfds611.a -lubx
 
 clean:
 	rm -f *.o *.so *~ core
