@@ -18,5 +18,7 @@ webif.lua.hexarr: webif.lua
 webif.o: webif.c $(INCLUDE_DIR)/ubx.h $(INCLUDE_DIR)/ubx_types.h $(INCLUDE_DIR)/ubx.c $(HEXARRS) webif.lua.hexarr
 	${CC} -fPIC -I$(INCLUDE_DIR) -c $(CFLAGS) webif.c
 
+install: webif.so $(UBX_LIB)
+	${CC} $(CFLAGS_SHARED) $(LDFLAGS) -o webif.so webif.o mongoose.o -lluajit-5.1 -lpthread -lubx
 clean:
 	rm -f *.o *.so *~ core $(HEXARRS)
