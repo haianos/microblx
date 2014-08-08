@@ -1,6 +1,7 @@
 ROOT_DIR=$(CURDIR)/../..
 include $(ROOT_DIR)/make.conf
 INCLUDE_DIR=$(ROOT_DIR)/src/
+SUBDIR_INSTALL=/lib/ubx/std_blocks/mqueue
 
 default: mqueue.so mqueue_raw.so
 
@@ -16,9 +17,10 @@ mqueue_raw.so: mqueue_raw.o $(INCLUDE_DIR)/libubx.so
 mqueue_raw.o: mqueue_raw.c $(INCLUDE_DIR)/ubx.h $(INCLUDE_DIR)/ubx_types.h $(INCLUDE_DIR)/ubx.c
 	${CC} -fPIC -I$(INCLUDE_DIR) -c $(CFLAGS) mqueue_raw.c
 
-install: mqueue.so mqueue_raw.so $(UBX_LIB)
-	${CC} $(CFLAGS_SHARED) $(LDFLAGS) -o mqueue_raw.so mqueue_raw.o -lubx
-	${CC} $(CFLAGS_SHARED) $(LDFLAGS) -o mqueue.so mqueue.o -lubx
+install: mqueue.o mqueue_raw.o $(UBX_LIB)
+	if [ ! -d "$(UBX_INSTALL)$(SUBDIR_INSTALL)" ]; then mkdir -p $(UBX_INSTALL)$(SUBDIR_INSTALL); fi
+	${CC} $(CFLAGS_SHARED) $(LDFLAGS) -o $(UBX_INSTALL)$(SUBDIR_INSTALL)/mqueue_raw.so mqueue_raw.o -lubx
+	${CC} $(CFLAGS_SHARED) $(LDFLAGS) -o $(UBX_INSTALL)$(SUBDIR_INSTALL)/mqueue.so mqueue.o -lubx
 
 clean:
 	rm -f *.o *.so *~ core

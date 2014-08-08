@@ -13,6 +13,14 @@ md5.o: md5.h
 ubx.o: ubx.c ubx_proto.h ubx.h ubx_types.h uthash.h uthash_ffi.h
 	${CC} -fPIC -c ${LIBUBX_CFLAGS} ubx.c
 
+install: ubx.o md5.o
+	if [ ! -d "$(UBX_INSTALL)$(SUBDIR_INSTALL)" ]; then mkdir -p $(UBX_INSTALL)/lib/ubx; fi
+	${CC} $(LIBUBX_CFLAGS_SHARED) -o $(UBX_LIB) $^ -lrt -ldl
+
+uninstall: $(UBX_LIB)
+	rm $(UBX_LIB)
+	rm -r $(UBX_INSTALL)/lib/ubx
+
 clean:
 	rm -f *.o *.so *~ core
 

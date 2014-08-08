@@ -1,6 +1,7 @@
 ROOT_DIR=$(CURDIR)/../..
 include $(ROOT_DIR)/make.conf
 INCLUDE_DIR=$(ROOT_DIR)/src/
+SUBDIR_INSTALL=/lib/ubx/std_blocks/webif
 
 TYPES:=$(wildcard types/*.h)
 HEXARRS:=$(TYPES:%=%.hexarr)
@@ -18,7 +19,8 @@ webif.lua.hexarr: webif.lua
 webif.o: webif.c $(INCLUDE_DIR)/ubx.h $(INCLUDE_DIR)/ubx_types.h $(INCLUDE_DIR)/ubx.c $(HEXARRS) webif.lua.hexarr
 	${CC} -fPIC -I$(INCLUDE_DIR) -c $(CFLAGS) webif.c
 
-install: webif.so $(UBX_LIB)
-	${CC} $(CFLAGS_SHARED) $(LDFLAGS) -o webif.so webif.o mongoose.o -lluajit-5.1 -lpthread -lubx
+install: webif.o $(UBX_LIB)
+	if [ ! -d "$(UBX_INSTALL)$(SUBDIR_INSTALL)" ]; then mkdir -p $(UBX_INSTALL)$(SUBDIR_INSTALL); fi
+	${CC} $(CFLAGS_SHARED) $(LDFLAGS) -o $(UBX_INSTALL)$(SUBDIR_INSTALL)/webif.so webif.o mongoose.o -lluajit-5.1 -lpthread -lubx
 clean:
 	rm -f *.o *.so *~ core $(HEXARRS)

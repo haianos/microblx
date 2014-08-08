@@ -2,7 +2,7 @@ include make.conf
 
 INCLUDE_DIR=$(CURDIR)/src/
 DIRS=src $(wildcard std_blocks/* std_types/* examples)
-IDIRS=std_types/stdtypes std_blocks/ptrig std_blocks/webif std_blocks/lfds_buffers std_blocks/luablock std_blocks/random std_blocks/hexdump std_blocks/mqueue std_blocks/logging std_blocks/simple_fifo
+IDIRS=src std_types/stdtypes std_blocks/ptrig std_blocks/webif std_blocks/lfds_buffers std_blocks/luablock std_blocks/random std_blocks/hexdump std_blocks/mqueue std_blocks/logging std_blocks/simple_fifo
 
 SHELL = /bin/sh
 INSTALL = /usr/bin/install
